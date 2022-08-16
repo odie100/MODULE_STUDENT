@@ -10,7 +10,7 @@ public interface LocationService {
 
     LocationResponseDTO getLocation(Long id);
 
-    LocationResponseDTO update(Long id, LocationRequestDTO locationRequestDTO);
+    int update(Long id, LocationRequestDTO locationRequestDTO);
 
     boolean delete(Long id);
 

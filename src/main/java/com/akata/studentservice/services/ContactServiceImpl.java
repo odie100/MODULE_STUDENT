@@ -3,9 +3,13 @@ package com.akata.studentservice.services;
 import com.akata.studentservice.dto.ContactRequestDTO;
 import com.akata.studentservice.dto.ContactResponseDTO;
 import com.akata.studentservice.entities.Contact;
+import com.akata.studentservice.entities.Student;
 import com.akata.studentservice.mapper.ContactMapper;
+import com.akata.studentservice.mapper.StudentMapper;
+import com.akata.studentservice.model.ContactModel;
 import com.akata.studentservice.repository.ContactRepository;
 import com.akata.studentservice.services.interfaces.ContactService;
+import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,12 @@ public class ContactServiceImpl implements ContactService {
     @Autowired
     private ContactMapper contactMapper;
 
+    @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
+    private StudentService studentService;
+
     @Override
     public ContactResponseDTO save(ContactRequestDTO contactRequestDTO) {
         Contact contact = this.contactMapper.contactRequestDTOContact(contactRequestDTO);
@@ -33,10 +43,20 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactResponseDTO update(Long id, ContactRequestDTO contactRequestDTO) {
-        Contact contact = this.contactMapper.contactRequestDTOContact(contactRequestDTO);
-        contact.setId(id);
-        return this.contactMapper.contactToContactResponseDTO(this.contactRepository.save(contact));
+    public int update(Long id, ContactModel contactModel) {
+        if(contactModel.getType().equals("email")){
+            return this.contactRepository.updateEmail(contactModel.getValue(), id);
+        }else{
+            Contact checked_contact = this.contactRepository.findExisting("tel", id);
+            if(checked_contact != null){
+                return this.contactRepository.updateTel(contactModel.getValue(), id);
+            }else{
+                Student student = this.studentMapper.studentResponseDTOStudent(this.studentService.getStudent(id));
+                Contact contact = new Contact(null, "tel", contactModel.getValue(), student);
+                this.contactRepository.save(contact);
+                return 1;
+            }
+        }
     }
 
     @Override

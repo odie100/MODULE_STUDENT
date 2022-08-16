@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/rating")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RecommendationController {
     @Autowired
     private RecommendationService recommendationService;

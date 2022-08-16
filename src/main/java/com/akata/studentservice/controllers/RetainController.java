@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/retain")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RetainController {
     @Autowired
     private RetainService retainService;

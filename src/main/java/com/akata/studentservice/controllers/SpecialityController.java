@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/speciality")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SpecialityController {
     @Autowired
     private SpecialityService specialityService;

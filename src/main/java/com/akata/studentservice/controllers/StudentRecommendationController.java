@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/student_recommendation")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class StudentRecommendationController {
     @Autowired
     private SRecommendationService studentRecommendationService;

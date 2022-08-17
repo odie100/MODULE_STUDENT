@@ -18,4 +18,8 @@ public interface ApplyService {
     List<ApplyResponseDTO> getAllApplies();
 
     List<ApplyResponseDTO> getAllAppliesByIdStudent(Long id);
+
+    int confirm(Long id_student);
+
+    List<ApplyResponseDTO> getAllAppliesByIdOffer(Long id);
 }

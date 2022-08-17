@@ -103,4 +103,19 @@ public class ApplyServiceImpl implements ApplyService {
         return applies.stream().map(apply -> this.applyMapper.applyToApplyResponseDTO(apply))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public int confirm(Long id_student) {
+        return this.applyRepository.update(id_student);
+    }
+
+    @Override
+    public List<ApplyResponseDTO> getAllAppliesByIdOffer(Long id) {
+        List<Apply> applies = this.applyRepository.getApplyByIdOffer(id);
+        for(Apply apply: applies){
+            OfferResponseDTO offerResponseDTO = this.applyRestOffer.getOffer(id);
+            apply.setOffer(offerResponseDTO);
+        }
+        return applies.stream().map(apply -> this.applyMapper.applyToApplyResponseDTO(apply)).collect(Collectors.toList());
+    }
 }

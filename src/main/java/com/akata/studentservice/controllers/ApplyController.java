@@ -44,4 +44,14 @@ public class ApplyController {
     public List<ApplyResponseDTO> getAppliesByStudentId(@PathVariable("id") Long id){
         return this.applyService.getAllAppliesByIdStudent(id);
     }
+
+    @PostMapping(path = "/confirm/{id}")
+    public int confirm(@PathVariable("id") Long id_student){
+        return this.applyService.confirm(id_student);
+    }
+
+    @GetMapping(path = "/getAllByOffer/{id}")
+    public List<ApplyResponseDTO> getAppliesByOfferId(@PathVariable("id") Long id){
+        return this.applyService.getAllAppliesByIdOffer(id);
+    }
 }

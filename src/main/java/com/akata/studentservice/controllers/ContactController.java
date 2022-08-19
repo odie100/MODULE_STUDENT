@@ -44,4 +44,9 @@ public class ContactController {
     public List<ContactResponseDTO> getAllByIdUser(@PathVariable("id") Long id){
         return this.contactService.getContactByIdUser(id);
     }
+
+    @GetMapping(path = "/getByStudentAndType/{id}")
+    public ContactResponseDTO findByStudentAndType(String type,@PathVariable("id") Long id){
+        return this.contactService.findByStudentAndType("email", id);
+    }
 }

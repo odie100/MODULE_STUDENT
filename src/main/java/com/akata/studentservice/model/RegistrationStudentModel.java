@@ -20,5 +20,6 @@ public class RegistrationStudentModel {
     String bio;
     String email;
     String tel;
+    String current_position;
     Long id_location;
 }

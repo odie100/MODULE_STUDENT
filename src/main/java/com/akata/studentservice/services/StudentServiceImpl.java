@@ -111,6 +111,7 @@ public class StudentServiceImpl implements StudentService {
         studentRequestDTO.setSchool(registrationStudentModel.getSchool());
         studentRequestDTO.setSchool_career(registrationStudentModel.getSchool_career());
         studentRequestDTO.setBio(registrationStudentModel.getBio());
+        studentRequestDTO.setCurrent_position(registrationStudentModel.getCurrent_position());
         StudentResponseDTO student_saved = save(studentRequestDTO);
         //last Step:
         if(!registrationStudentModel.getEmail().isEmpty()){

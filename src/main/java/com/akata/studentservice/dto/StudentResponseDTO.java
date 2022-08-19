@@ -21,5 +21,6 @@ public class StudentResponseDTO {
     private String school;
     private String bio;
     private String school_career;
+    private String current_position;
     private LocalDate creation;
 }

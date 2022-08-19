@@ -27,6 +27,7 @@ public class Apply {
     LocalDate apply_date;
     String status;
     Float price;
+    @Column(columnDefinition = "TEXT")
     String message;
 
     @Transient

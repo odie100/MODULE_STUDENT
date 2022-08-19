@@ -82,4 +82,9 @@ public class ContactServiceImpl implements ContactService {
         return contacts.stream().map(contact -> this.contactMapper.contactToContactResponseDTO(contact))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public ContactResponseDTO findByStudentAndType(String type, Long id_student) {
+        return this.contactMapper.contactToContactResponseDTO(this.contactRepository.findExisting(type, id_student));
+    }
 }

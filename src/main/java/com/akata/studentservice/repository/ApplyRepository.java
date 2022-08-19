@@ -16,8 +16,12 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("SELECT a FROM Apply a where a.offer_id = ?1")
     List<Apply> getApplyByIdOffer(Long id_offer);
+
+    @Query("SELECT a FROM Apply a where a.offer_id = ?1 AND status = 'confirmed'")
+    List<Apply> getApplyConfirmed(Long id);
+
     @Modifying
     @Transactional
-    @Query("UPDATE Apply a SET a.status = 'confirmed' where a.student.id = ?1")
+    @Query("UPDATE Apply a SET a.status = 'confirmed' where a.id = ?1")
     int update(Long id);
 }

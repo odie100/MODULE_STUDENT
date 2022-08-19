@@ -18,4 +18,5 @@ public class StudentModel {
     private String town;
     private String email;
     private String tel;
+    private String current_position;
 }

@@ -19,4 +19,5 @@ public class StudentRequestDTO {
     private String school_career;
     private String bio;
     private LocalDate creation;
+    private String current_position;
 }

@@ -3,6 +3,7 @@ package com.akata.studentservice.services.interfaces;
 import com.akata.studentservice.dto.ApplyRequestDTO;
 import com.akata.studentservice.dto.ApplyResponseDTO;
 import com.akata.studentservice.model.ApplyModel;
+import com.akata.studentservice.model.ConfirmationModel;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ public interface ApplyService {
 
     List<ApplyResponseDTO> getAllAppliesByIdStudent(Long id);
 
-    int confirm(Long id_student);
+    int confirm(ConfirmationModel confirmationModel);
 
     List<ApplyResponseDTO> getAllAppliesByIdOffer(Long id);
+
+    List<ApplyResponseDTO> getConfirmedApply(Long id);
 }

@@ -23,6 +23,8 @@ public class Student {
     private String school;
     private String level;
     private String school_career;
+    private String current_position;
+    @Lob
     private String bio;
 
     @ManyToOne()

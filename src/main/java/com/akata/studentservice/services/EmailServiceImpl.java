@@ -15,7 +15,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public boolean send(EmailModel emailModel) {
-        String username = "andriampeno.odilon@gmail.com";
+       /* String username = "andriampeno.odilon@gmail.com";
         String password = "kicktqhgqelnnnir";
 
         Properties props = new Properties();
@@ -36,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
             msg.setFrom(new InternetAddress(emailModel.getFrom()));
             msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailModel.getTo()));
             msg.setSubject(emailModel.getSubject());
-            msg.setContent(emailModel.getContent() , "text/html");
+            msg.setContent(emailModel.getText() , "text/html");
             msg.setSentDate(new Date());
 
             Transport.send(msg);
@@ -44,6 +44,7 @@ public class EmailServiceImpl implements EmailService {
         } catch (MessagingException e) {
             e.printStackTrace();
             return false;
-        }
+        }*/
+        return true;
     }
 }

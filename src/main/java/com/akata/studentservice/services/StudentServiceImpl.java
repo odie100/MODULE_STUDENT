@@ -7,7 +7,9 @@ import com.akata.studentservice.mapper.StudentMapper;
 import com.akata.studentservice.model.ContactModel;
 import com.akata.studentservice.model.RegistrationStudentModel;
 import com.akata.studentservice.model.StudentModel;
+import com.akata.studentservice.repository.RatingRepository;
 import com.akata.studentservice.repository.StudentRepository;
+import com.akata.studentservice.services.interfaces.ApplyService;
 import com.akata.studentservice.services.interfaces.ContactService;
 import com.akata.studentservice.services.interfaces.LocationService;
 import com.akata.studentservice.services.interfaces.StudentService;
@@ -34,6 +36,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private RatingService ratingService;
+
+    @Autowired
+    private ApplyService applyService;
 
     @Override
     public StudentResponseDTO save(StudentRequestDTO studentRequestDTO) {
@@ -77,8 +85,19 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public List<StudentResponseDTO> getAllStudents() {
-        return studentRepository.findAll().stream()
-                .map(student -> studentMapper.studentToStudentResponseDTO(student)).collect(Collectors.toList());
+        List<Student> students = studentRepository.findAll();
+        List<StudentResponseDTO> studentResponseDTOS = students.stream().map(student -> this.studentMapper
+                .studentToStudentResponseDTO(student)).collect(Collectors.toList());
+
+        for(StudentResponseDTO studentResponseDTO: studentResponseDTOS){
+            studentResponseDTO.setAverage(this.ratingService.average(studentResponseDTO.getId()));
+            studentResponseDTO.setEmail(this.contactService.getEmail(studentResponseDTO.getId()).getValue());
+            studentResponseDTO.setPhone(this.contactService.getPhone(studentResponseDTO.getId()).getValue());
+            studentResponseDTO.setProject_finished(this.applyService.countProjectFinished(studentResponseDTO.getId()));
+            studentResponseDTO.setProject_on_progress(this.applyService.countProjectOnProgress(studentResponseDTO.getId()));
+        }
+
+        return studentResponseDTOS;
     }
 
     @Override

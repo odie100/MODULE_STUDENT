@@ -16,15 +16,26 @@ import com.akata.studentservice.services.interfaces.ApplyService;
 import com.akata.studentservice.services.interfaces.ContactService;
 import com.akata.studentservice.services.interfaces.EmailService;
 import com.akata.studentservice.services.interfaces.StudentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ApplyServiceImpl implements ApplyService {
 
     @Autowired
@@ -50,6 +61,16 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Autowired
     private ContactService contactService;
+
+    @Autowired
+    private final JavaMailSender emailSender;
+    @Autowired
+    private final SpringTemplateEngine templateEngine;
+
+    public ApplyServiceImpl(JavaMailSender emailSender, SpringTemplateEngine templateEngine) {
+        this.emailSender = emailSender;
+        this.templateEngine = templateEngine;
+    }
 
     @Override
     public ApplyResponseDTO save(ApplyModel applyModel) {
@@ -118,7 +139,7 @@ public class ApplyServiceImpl implements ApplyService {
     }
 
     @Override
-    public int confirm(ConfirmationModel confirmationModel) {
+    public int confirm(ConfirmationModel confirmationModel) throws MessagingException {
         int state = this.applyRepository.update(confirmationModel.getId_apply());
 
         ContactResponseDTO contactResponseDTO = this.applyRestClient.getContact(confirmationModel.getId_client());
@@ -126,12 +147,53 @@ public class ApplyServiceImpl implements ApplyService {
         String from = contactResponseDTO.getValue();
         String subject = "Retour suit au postulation";
         String to = contactResponseDTO1.getValue();
-        String content = "Votre candidature est bien validé ..C'est à vous de jouer !";
-        EmailModel emailModel = new EmailModel(from, subject, content, to);
-        if(state == 1){
+        String content = "";
+        /*EmailModel emailModel = new EmailModel(to, from, subject,content,"",);*/
+/*        if(state == 1){
             this.emailService.send(emailModel);
             return 1;
         }else{
+            return -1;
+        }*/
+
+        EmailModel email = new EmailModel();
+        email.setFrom(from);
+        email.setText(content);
+        email.setTo(to);
+        email.setSubject(subject);
+        email.setProperties(null);
+        email.setTemplate("");
+        email.setClient_name(confirmationModel.getClient_name());
+        email.setStudent_name(confirmationModel.getStudent_name());
+
+
+
+        String msg = "Félicitation "+email.getStudent_name()+"! Vous êtes selectionné parmis les candidats qui ont "+
+                "postulé à l'offre de "+email.getClient_name();
+
+        Map<String, Object> properties = new HashMap<>();
+
+        properties.put("name",email.getStudent_name());
+        properties.put("client", email.getClient_name());
+        properties.put("message",msg);
+        email.setProperties(properties);
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+        Context context = new Context();
+        context.setVariables(email.getProperties());
+        helper.setFrom(email.getFrom());
+        helper.setTo(email.getTo());
+        helper.setSubject(email.getSubject());
+        String html = templateEngine.process("email-template.html", context);
+        helper.setText(html, true);
+
+        log.info("Sending email: {} with html body: {}", email, html);
+
+        try {
+            emailSender.send(message);
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
             return -1;
         }
     }
@@ -150,5 +212,15 @@ public class ApplyServiceImpl implements ApplyService {
     public List<ApplyResponseDTO> getConfirmedApply(Long id) {
         List<Apply> applies = this.applyRepository.getApplyConfirmed(id);
         return applies.stream().map(apply -> this.applyMapper.applyToApplyResponseDTO(apply)).collect(Collectors.toList());
+    }
+
+    @Override
+    public int countProjectOnProgress(Long id) {
+        return this.applyRepository.countProjectOnProgress(id);
+    }
+
+    @Override
+    public int countProjectFinished(Long id) {
+        return this.applyRepository.countProjectFinished(id);
     }
 }

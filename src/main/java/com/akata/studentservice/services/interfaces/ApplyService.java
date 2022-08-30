@@ -5,6 +5,7 @@ import com.akata.studentservice.dto.ApplyResponseDTO;
 import com.akata.studentservice.model.ApplyModel;
 import com.akata.studentservice.model.ConfirmationModel;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 public interface ApplyService {
@@ -20,9 +21,13 @@ public interface ApplyService {
 
     List<ApplyResponseDTO> getAllAppliesByIdStudent(Long id);
 
-    int confirm(ConfirmationModel confirmationModel);
+    int confirm(ConfirmationModel confirmationModel) throws MessagingException;
 
     List<ApplyResponseDTO> getAllAppliesByIdOffer(Long id);
 
     List<ApplyResponseDTO> getConfirmedApply(Long id);
+
+    int countProjectOnProgress(Long id);
+
+    int countProjectFinished(Long id);
 }

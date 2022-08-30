@@ -14,6 +14,12 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
     @Query("SELECT c FROM Contact c where c.student.id = ?1")
     List<Contact> findAllByIdUser(Long id);
 
+    @Query("SELECT c FROM Contact c where c.student.id = ?1 AND c.type = 'email'")
+    Contact getEmail(Long id);
+
+    @Query("SELECT c FROM Contact c where c.student.id = ?1 AND c.type = 'tel'")
+    Contact getPhone(Long id);
+
     @Modifying
     @Transactional
     @Query("UPDATE Contact c SET  c.value = ?1 WHERE c.student.id = ?2 AND c.type = 'email'")

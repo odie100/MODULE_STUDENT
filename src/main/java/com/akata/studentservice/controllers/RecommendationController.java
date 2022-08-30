@@ -14,7 +14,7 @@ public class RecommendationController {
     @Autowired
     private RecommendationService recommendationService;
 
-    @PostMapping(path = "/insert")
+    @PostMapping(path = "/save")
     public RecommendationResponseDTO insert(@RequestBody RecommendationRequestDTO recommendationRequestDTO){
         return this.recommendationService.save(recommendationRequestDTO);
     }

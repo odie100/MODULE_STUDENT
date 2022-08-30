@@ -17,7 +17,11 @@ public class StudentRequestDTO {
     private String level;
     private String school;
     private String school_career;
+    private String dob;
     private String bio;
     private LocalDate creation;
     private String current_position;
+    private String photo;
+    private String github;
+    private String linkedin;
 }

@@ -20,4 +20,8 @@ public interface ContactService {
     List<ContactResponseDTO> getContactByIdUser(Long id);
 
     ContactResponseDTO findByStudentAndType(String type, Long id_student);
+
+    ContactResponseDTO getEmail(Long id);
+
+    ContactResponseDTO getPhone(Long id);
 }

@@ -24,8 +24,15 @@ public class Student {
     private String level;
     private String school_career;
     private String current_position;
-    @Lob
+    private String photo;
+    private String github;
+    private String linkedin;
+    private String dob;
+    @Column(length = 9999)
     private String bio;
+
+    @Transient
+    private int average;
 
     @ManyToOne()
     @JoinColumn(name = "location_id")

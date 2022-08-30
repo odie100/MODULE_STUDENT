@@ -23,4 +23,13 @@ public class StudentResponseDTO {
     private String school_career;
     private String current_position;
     private LocalDate creation;
+    private String photo;
+    private String github;
+    private String linkedin;
+    private int average;
+    private String email;
+    private String phone;
+    private String dob;
+    private int project_on_progress;
+    private int project_finished;
 }

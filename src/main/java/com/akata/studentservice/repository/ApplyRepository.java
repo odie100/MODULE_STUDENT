@@ -24,4 +24,10 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
     @Transactional
     @Query("UPDATE Apply a SET a.status = 'confirmed' where a.id = ?1")
     int update(Long id);
+
+    @Query("SELECT COUNT(a.id) FROM Apply a WHERE a.status = 'in progress' AND a.student.id = ?1 ")
+    int countProjectOnProgress(Long id);
+
+    @Query("SELECT COUNT(a.id) FROM Apply a WHERE a.status = 'confirmed' AND a.student.id = ?1 ")
+    int countProjectFinished(Long id);
 }

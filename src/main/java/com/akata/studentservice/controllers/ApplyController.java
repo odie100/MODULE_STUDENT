@@ -8,6 +8,7 @@ import com.akata.studentservice.services.interfaces.ApplyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -47,7 +48,7 @@ public class ApplyController {
     }
 
     @PostMapping(path = "/confirm")
-    public int confirm(@RequestBody ConfirmationModel confirmationModel){
+    public int confirm(@RequestBody ConfirmationModel confirmationModel) throws MessagingException {
         return this.applyService.confirm(confirmationModel);
     }
 

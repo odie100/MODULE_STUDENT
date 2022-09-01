@@ -19,4 +19,5 @@ public class StudentModel {
     private String email;
     private String tel;
     private String current_position;
+    private String photo;
 }

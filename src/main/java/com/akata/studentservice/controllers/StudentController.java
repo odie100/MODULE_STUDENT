@@ -5,10 +5,18 @@ import com.akata.studentservice.dto.StudentRequestDTO;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.mapper.StudentMapper;
 import com.akata.studentservice.model.StudentModel;
+import com.akata.studentservice.services.FileStorageService;
 import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -19,6 +27,14 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @PostMapping(path = "/upload")
+    public String uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
+        return this.studentService.uploadPhoto(file);
+    }
 
     @PostMapping(path = "/insert")
     public StudentResponseDTO save(@RequestBody StudentRequestDTO studentRequestDTO){
@@ -43,5 +59,11 @@ public class StudentController {
     @PutMapping("/update/{id}")
     public int update(@PathVariable("id") Long id, @RequestBody StudentModel studentModel){
         return studentService.update(id,studentModel);
+    }
+
+
+    @GetMapping(path = "/images/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public Resource download (@PathVariable String filename) throws IOException {
+       return this.fileStorageService.loadFile(filename);
     }
 }

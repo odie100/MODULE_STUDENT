@@ -16,7 +16,10 @@ import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +45,9 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private ApplyService applyService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @Override
     public StudentResponseDTO save(StudentRequestDTO studentRequestDTO) {
@@ -70,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
         this.contactService.update(id, tel_model);
 
         return this.studentRepository.update(sm.getUsername(), sm.getFirstname(), sm.getSchool(), sm.getLevel(),
-                sm.getSchool_career(), sm.getBio(), id);
+                sm.getSchool_career(), sm.getBio(), sm.getPhoto(), id);
     }
 
     @Override
@@ -112,6 +118,9 @@ public class StudentServiceImpl implements StudentService {
         return studentResponseDTO;
     }
 
+
+
+
     @Override
     public StudentResponseDTO register(RegistrationStudentModel registrationStudentModel) {
         //Step 1:
@@ -150,5 +159,10 @@ public class StudentServiceImpl implements StudentService {
         }
 
         return student_saved;
+    }
+
+    @Override
+    public String uploadPhoto(MultipartFile file) throws IOException {
+        return this.fileStorageService.saveImage(file);
     }
 }

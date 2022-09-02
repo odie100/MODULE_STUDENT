@@ -20,4 +20,5 @@ public class StudentModel {
     private String tel;
     private String current_position;
     private String photo;
+    private String cv;
 }

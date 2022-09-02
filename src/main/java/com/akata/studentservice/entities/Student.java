@@ -1,9 +1,6 @@
 package com.akata.studentservice.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +10,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,6 +25,7 @@ public class Student {
     private String photo;
     private String github;
     private String linkedin;
+    private String cv;
     private String dob;
     @Column(length = 9999)
     private String bio;

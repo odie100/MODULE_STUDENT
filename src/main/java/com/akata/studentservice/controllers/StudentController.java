@@ -36,6 +36,13 @@ public class StudentController {
         return this.studentService.uploadPhoto(file);
     }
 
+    @PostMapping(path = "/upload/file/{id}")
+    public String uploadDocument(@RequestParam("document") MultipartFile file, @PathVariable("id") Long id) throws IOException {
+        String cv_name = this.studentService.uploadDocument(file);
+        this.studentService.updateCV(cv_name, id);
+        return cv_name;
+    }
+
     @PostMapping(path = "/insert")
     public StudentResponseDTO save(@RequestBody StudentRequestDTO studentRequestDTO){
         return studentService.save(studentRequestDTO);
@@ -61,9 +68,13 @@ public class StudentController {
         return studentService.update(id,studentModel);
     }
 
-
     @GetMapping(path = "/images/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public Resource download (@PathVariable String filename) throws IOException {
+    public Resource load (@PathVariable String filename) throws IOException {
        return this.fileStorageService.loadFile(filename);
+    }
+
+    @GetMapping(path = "/download/document/{filename}", produces = MediaType.ALL_VALUE)
+    public Resource downloadDocument(@PathVariable String filename) throws IOException {
+        return this.fileStorageService.loadDocument(filename);
     }
 }

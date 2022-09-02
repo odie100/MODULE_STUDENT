@@ -1,16 +1,11 @@
 package com.akata.studentservice;
 
-import com.akata.studentservice.configuration.FileStorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients
-@EnableConfigurationProperties({
-        FileStorageProperties.class
-})
 public class ServiceStudentApplication {
 
     public static void main(String[] args) {

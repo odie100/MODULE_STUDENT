@@ -1,10 +1,7 @@
 package com.akata.studentservice.dto;
 
 import com.akata.studentservice.entities.Location;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -12,6 +9,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class StudentResponseDTO {
     private Long id;
     private String username;
@@ -30,6 +28,7 @@ public class StudentResponseDTO {
     private String email;
     private String phone;
     private String dob;
+    private String cv;
     private int project_on_progress;
     private int project_finished;
 }

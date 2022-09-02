@@ -58,7 +58,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDTO getStudent(Long id) {
-        return studentMapper.studentToStudentResponseDTO(studentRepository.findById(id).get());
+        Student student = studentRepository.findById(id).get();
+        StudentResponseDTO studentResponseDTO = this.studentMapper.studentToStudentResponseDTO(student);
+        studentResponseDTO.setEmail(this.contactService.getEmail(student.getId()).getValue());
+        studentResponseDTO.setPhone(this.contactService.getPhone(student.getId()).getValue());
+        System.out.println(student);
+        return studentResponseDTO;
     }
 
     @Override
@@ -80,6 +85,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public int updateCV(String cv_name, Long id) {
+        return this.studentRepository.updateCV(cv_name, id);
+    }
+
+    @Override
     public boolean delete(Long id) {
         try {
             studentRepository.deleteById(id);
@@ -96,6 +106,7 @@ public class StudentServiceImpl implements StudentService {
                 .studentToStudentResponseDTO(student)).collect(Collectors.toList());
 
         for(StudentResponseDTO studentResponseDTO: studentResponseDTOS){
+            System.out.println(studentResponseDTO);
             studentResponseDTO.setAverage(this.ratingService.average(studentResponseDTO.getId()));
             studentResponseDTO.setEmail(this.contactService.getEmail(studentResponseDTO.getId()).getValue());
             studentResponseDTO.setPhone(this.contactService.getPhone(studentResponseDTO.getId()).getValue());
@@ -165,4 +176,10 @@ public class StudentServiceImpl implements StudentService {
     public String uploadPhoto(MultipartFile file) throws IOException {
         return this.fileStorageService.saveImage(file);
     }
+
+    @Override
+    public String uploadDocument(MultipartFile file) throws IOException {
+        return this.fileStorageService.saveDocument(file);
+    }
+
 }

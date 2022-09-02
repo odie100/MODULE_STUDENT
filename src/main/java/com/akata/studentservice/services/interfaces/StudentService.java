@@ -15,6 +15,8 @@ public interface StudentService {
 
     int update(Long id, StudentModel studentModel);
 
+    int updateCV(String cv_name, Long id);
+
     boolean delete(Long id);
     List<StudentResponseDTO> getAllStudents();
 
@@ -23,4 +25,6 @@ public interface StudentService {
     StudentResponseDTO register(RegistrationStudentModel registrationStudentModel);
 
     String uploadPhoto(MultipartFile file) throws IOException;
+
+    String uploadDocument(MultipartFile file) throws IOException;
 }

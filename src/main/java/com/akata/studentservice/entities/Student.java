@@ -27,7 +27,7 @@ public class Student {
     private String linkedin;
     private String cv;
     private String dob;
-    @Column(length = 9999)
+    @Lob
     private String bio;
 
     @Transient

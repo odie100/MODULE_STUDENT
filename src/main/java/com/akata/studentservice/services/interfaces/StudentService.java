@@ -24,7 +24,9 @@ public interface StudentService {
 
     StudentResponseDTO register(RegistrationStudentModel registrationStudentModel);
 
-    String uploadPhoto(MultipartFile file) throws IOException;
+    String uploadPhoto(MultipartFile photo) throws IOException;
 
-    String uploadDocument(MultipartFile file) throws IOException;
+    String uploadDocument(MultipartFile document) throws IOException;
+
+    String uploadVideo(MultipartFile video) throws IOException;
 }

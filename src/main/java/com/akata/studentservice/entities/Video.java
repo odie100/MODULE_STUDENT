@@ -9,14 +9,14 @@ import javax.persistence.*;
 
 @Entity
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-public class Experience {
+@AllArgsConstructor @NoArgsConstructor
+public class Video {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    String place;
-    String theme;
-    String tech;
-    @Lob
-    String details;
+    String video_name;
+    String video_description;
+
+    @ManyToOne
+    Student student;
 }

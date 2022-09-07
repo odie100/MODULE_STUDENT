@@ -52,6 +52,21 @@ public class FileStorageService {
         }
     }
 
+    public String saveVideo(MultipartFile video) throws IOException {
+        String video_name = StringUtils.cleanPath(video.getOriginalFilename());
+        Path upload_path = Paths.get(upload_dir+"/videos");
+        if(!Files.exists(upload_path)){
+            Files.createDirectories(upload_path);
+        }
+        try (InputStream inputStream = video.getInputStream()){
+            Path video_path = upload_path.resolve(video_name);
+            Files.copy(inputStream, video_path, StandardCopyOption.REPLACE_EXISTING);
+            return video_name;
+        }catch (IOException e){
+            throw new IOException("Could not save video: "+video_name +e);
+        }
+    }
+
     public Resource loadFile(String file_name) throws IOException {
         Path upload_path = Paths.get(upload_dir+"/images");
         Path file_path = upload_path.resolve(file_name).normalize();
@@ -71,6 +86,17 @@ public class FileStorageService {
             return resource;
         }else{
             throw new IOException("Document not found !");
+        }
+    }
+
+    public Resource loadVideo(String video_name) throws IOException {
+        Path upload_path = Paths.get(upload_dir+"/videos");
+        Path video_path = upload_path.resolve(video_name).normalize();
+        Resource resource = new UrlResource(video_path.toUri());
+        if(resource.exists()){
+            return resource;
+        }else{
+            throw new IOException("Video not found !");
         }
     }
 }

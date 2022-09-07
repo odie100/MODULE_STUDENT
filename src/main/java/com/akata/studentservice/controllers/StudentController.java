@@ -23,9 +23,6 @@ import java.util.List;
 @RequestMapping(path = "/api/student")
 public class StudentController {
     @Autowired
-    private StudentMapper studentMapper;
-
-    @Autowired
     private StudentService studentService;
 
     @Autowired
@@ -41,6 +38,11 @@ public class StudentController {
         String cv_name = this.studentService.uploadDocument(file);
         this.studentService.updateCV(cv_name, id);
         return cv_name;
+    }
+
+    @PostMapping(path = "/upload/video")
+    public String uploadVideo(@RequestParam("video") MultipartFile video) throws IOException {
+        return this.studentService.uploadVideo(video);
     }
 
     @PostMapping(path = "/insert")

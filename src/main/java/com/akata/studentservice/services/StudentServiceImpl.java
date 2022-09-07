@@ -182,4 +182,9 @@ public class StudentServiceImpl implements StudentService {
         return this.fileStorageService.saveDocument(file);
     }
 
+    @Override
+    public String uploadVideo(MultipartFile video) throws IOException {
+        return this.fileStorageService.saveVideo(video);
+    }
+
 }

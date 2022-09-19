@@ -10,5 +10,4 @@ import lombok.Setter;
 public class SignInModel {
     private String email;
     private String password;
-    private String type;
 }

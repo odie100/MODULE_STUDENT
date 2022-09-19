@@ -119,9 +119,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentResponseDTO signIn(String email, String password) {
-        Student student = this.studentRepository.login(email, password);
-        System.out.println("Email: "+email+" password: "+password);
-        System.out.println("Student returned : "+ student.getFirstname());
+        Student student = null;
+        try {
+            student = this.studentRepository.login(email, password);
+        }catch (DataAccessException e){
+            throw new RuntimeException("User not found");
+        }
         StudentResponseDTO studentResponseDTO = null;
         if(student != null){
             studentResponseDTO = this.studentMapper.studentToStudentResponseDTO(student);

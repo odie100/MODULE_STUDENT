@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
-    @Query("SELECT s FROM Student s JOIN Contact ct on s.id = ct.student.id WHERE ct.value = ?1 AND s.password = ?2")
+    @Query("SELECT s.id FROM Student s JOIN Contact ct on s.id = ct.student.id WHERE ct.value = ?1 AND s.password = ?2")
     Student login(String email, String password);
 
     @Modifying

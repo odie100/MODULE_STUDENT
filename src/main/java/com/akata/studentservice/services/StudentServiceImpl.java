@@ -7,7 +7,7 @@ import com.akata.studentservice.mapper.StudentMapper;
 import com.akata.studentservice.model.ContactModel;
 import com.akata.studentservice.model.RegistrationStudentModel;
 import com.akata.studentservice.model.StudentModel;
-import com.akata.studentservice.repository.RatingRepository;
+import com.akata.studentservice.projections.StudentLightProjection;
 import com.akata.studentservice.repository.StudentRepository;
 import com.akata.studentservice.services.interfaces.ApplyService;
 import com.akata.studentservice.services.interfaces.ContactService;
@@ -16,7 +16,6 @@ import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -118,22 +117,22 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentResponseDTO signIn(String email, String password) {
-        Student student = null;
+    public StudentLightProjection signIn(String email, String password) {
+        Long id;
         try {
-            student = this.studentRepository.login(email, password);
+            id = this.studentRepository.login(email, password);
+            System.out.println("here is the id: "+id);
         }catch (DataAccessException e){
             throw new RuntimeException("User not found");
         }
-        StudentResponseDTO studentResponseDTO = null;
-        if(student != null){
-            studentResponseDTO = this.studentMapper.studentToStudentResponseDTO(student);
+        StudentLightProjection studentLightProjection = new StudentLightProjection();
+        if(id != null){
+            studentLightProjection.setId(id);
+            studentLightProjection.setType("student");
         }
-        return studentResponseDTO;
+        System.out.println("Projection returned: "+studentLightProjection.toString());
+        return studentLightProjection;
     }
-
-
-
 
     @Override
     public StudentResponseDTO register(RegistrationStudentModel registrationStudentModel) {

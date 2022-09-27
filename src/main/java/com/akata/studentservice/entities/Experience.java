@@ -14,9 +14,10 @@ public class Experience {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-    String place;
+    /* Need to delete these fields and modify the data in front*/
+/*    String place;
     String theme;
-    String tech;
+    String tech;*/
     @Lob
     String details;
 }

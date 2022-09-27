@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class ExperienceRequestDTO {
-    String place;
+/*    String place;
     String theme;
-    String tech;
+    String tech;*/
     String details;
 }

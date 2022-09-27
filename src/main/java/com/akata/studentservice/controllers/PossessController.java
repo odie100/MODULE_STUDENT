@@ -2,6 +2,7 @@ package com.akata.studentservice.controllers;
 
 import com.akata.studentservice.dto.PossessRequestDTO;
 import com.akata.studentservice.dto.PossessResponseDTO;
+import com.akata.studentservice.model.ExperienceModel;
 import com.akata.studentservice.services.interfaces.PossessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,8 @@ public class PossessController {
     }
 
     @PutMapping(path = "/{id}")
-    public PossessResponseDTO update(@PathVariable("id") Long id, @RequestBody PossessRequestDTO possessRequestDTO){
-        return this.possessService.update(id, possessRequestDTO);
+    public PossessResponseDTO update(@PathVariable("id") Long id, @RequestBody ExperienceModel experienceModel){
+        return this.possessService.update(id, experienceModel);
     }
 
     @GetMapping(path = "/all")

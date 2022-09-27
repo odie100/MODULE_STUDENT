@@ -4,6 +4,7 @@ import com.akata.studentservice.dto.StudentRequestDTO;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.model.RegistrationStudentModel;
 import com.akata.studentservice.model.StudentModel;
+import com.akata.studentservice.projections.StudentLightProjection;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public interface StudentService {
     boolean delete(Long id);
     List<StudentResponseDTO> getAllStudents();
 
-    StudentResponseDTO signIn(String email, String password);
+    StudentLightProjection signIn(String email, String password);
 
     StudentResponseDTO register(RegistrationStudentModel registrationStudentModel);
 

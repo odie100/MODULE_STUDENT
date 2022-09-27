@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor @AllArgsConstructor
 public class ExperienceResponseDTO {
     Long id;
-    String place;
+/*    String place;
     String theme;
-    String tech;
+    String tech;*/
     String details;
 }

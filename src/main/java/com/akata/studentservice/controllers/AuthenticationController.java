@@ -3,7 +3,9 @@ package com.akata.studentservice.controllers;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.model.RegistrationStudentModel;
 import com.akata.studentservice.model.SignInModel;
+import com.akata.studentservice.projections.StudentLightProjection;
 import com.akata.studentservice.services.interfaces.StudentService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ public class AuthenticationController {
 
     /*@CrossOrigin(origins = "http://localhost:3000")*/
     @PostMapping(path = "/signin/student")
-    public StudentResponseDTO signIn(@RequestBody SignInModel signInModel){
+    public StudentLightProjection signIn(@RequestBody SignInModel signInModel){
         return this.studentService.signIn(signInModel.getEmail(), signInModel.getPassword());
     }
 

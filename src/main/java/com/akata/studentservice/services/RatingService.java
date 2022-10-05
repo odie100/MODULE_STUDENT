@@ -23,7 +23,7 @@ public class RatingService {
     }
 
     public int average(Long id_student){
-        String avg = this.ratingRepository.average(id_student);
-        return ( avg != null ? Integer.parseInt(avg) : 0 );
+        Integer avg = this.ratingRepository.average(id_student);
+        return ( avg != null ? avg : 0 );
     }
 }

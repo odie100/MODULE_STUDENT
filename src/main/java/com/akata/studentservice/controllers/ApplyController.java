@@ -49,6 +49,7 @@ public class ApplyController {
 
     @PostMapping(path = "/confirm")
     public int confirm(@RequestBody ConfirmationModel confirmationModel) throws MessagingException {
+
         return this.applyService.confirm(confirmationModel);
     }
 

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
-    @Query("SELECT AVG(value) from Rating r where r.id_student = ?1")
-    String average(Long id);
+    @Query("SELECT AVG(r.value) from Rating r where r.id_student = ?1")
+    Integer average(Long id);
 }

@@ -140,7 +140,7 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     public int confirm(ConfirmationModel confirmationModel) throws MessagingException {
-        int state = this.applyRepository.update(confirmationModel.getId_apply());
+        this.applyRepository.update(confirmationModel.getId_apply());
 
         ContactResponseDTO contactResponseDTO = this.applyRestClient.getContact(confirmationModel.getId_client());
         ContactResponseDTO contactResponseDTO1 = this.contactService.findByStudentAndType("email", confirmationModel.getId_student());

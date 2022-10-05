@@ -14,7 +14,7 @@ public class RatingController {
     private RatingService ratingService;
 
     @PostMapping(path = "/insert")
-    public RatingResponseDTO insert(RatingRequestDTO ratingRequestDTO){
+    public RatingResponseDTO insert(@RequestBody RatingRequestDTO ratingRequestDTO){
         return this.ratingService.insert(ratingRequestDTO);
     }
 

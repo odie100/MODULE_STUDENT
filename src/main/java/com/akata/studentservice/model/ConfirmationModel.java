@@ -11,6 +11,7 @@ public class ConfirmationModel {
     private Long id_apply;
     private Long id_student;
     private Long id_client;
+    private Long id_offer;
     private String client_name;
     private String student_name;
 }

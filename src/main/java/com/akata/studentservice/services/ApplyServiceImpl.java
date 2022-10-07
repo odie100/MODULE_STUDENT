@@ -16,6 +16,9 @@ import com.akata.studentservice.services.interfaces.ApplyService;
 import com.akata.studentservice.services.interfaces.ContactService;
 import com.akata.studentservice.services.interfaces.EmailService;
 import com.akata.studentservice.services.interfaces.StudentService;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -144,17 +147,14 @@ public class ApplyServiceImpl implements ApplyService {
 
         ContactResponseDTO contactResponseDTO = this.applyRestClient.getContact(confirmationModel.getId_client());
         ContactResponseDTO contactResponseDTO1 = this.contactService.findByStudentAndType("email", confirmationModel.getId_student());
+        ContactResponseDTO contactResponseDTO2 = this.contactService.findByStudentAndType("phone", confirmationModel.getId_student());
+
         String from = contactResponseDTO.getValue();
         String subject = "Retour suit au postulation";
         String to = contactResponseDTO1.getValue();
         String content = "";
-        /*EmailModel emailModel = new EmailModel(to, from, subject,content,"",);*/
-/*        if(state == 1){
-            this.emailService.send(emailModel);
-            return 1;
-        }else{
-            return -1;
-        }*/
+
+        String message_phone = "Felicitation,  votre postulation pour l'offre de "+confirmationModel.getClient_name()+" a ete acceptee. Veuillez vous reconnecter le plus tot possible.";
 
         EmailModel email = new EmailModel();
         email.setFrom(from);
@@ -169,7 +169,7 @@ public class ApplyServiceImpl implements ApplyService {
 
 
         String msg = "Félicitation "+email.getStudent_name()+"! Vous êtes selectionné parmis les candidats qui ont "+
-                "postulé à l'offre de "+email.getClient_name();
+                "postulé à l'offre de \""+email.getClient_name().toUpperCase()+"\"";
 
         Map<String, Object> properties = new HashMap<>();
 
@@ -187,7 +187,9 @@ public class ApplyServiceImpl implements ApplyService {
         String html = templateEngine.process("email-template.html", context);
         helper.setText(html, true);
 
-        log.info("Sending email: {} with html body: {}", email, html);
+        Twilio.init("ACc13fba58007fc8e90050f061ddb47be3", "a3b349cac10a7f1d2fd9408c6daaae3c");
+        Message.creator(new PhoneNumber("+261349102786"),
+                new PhoneNumber("+17246134874"), message_phone).create();
 
         try {
             emailSender.send(message);

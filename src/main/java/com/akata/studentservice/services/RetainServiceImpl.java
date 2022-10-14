@@ -2,6 +2,8 @@ package com.akata.studentservice.services;
 
 import com.akata.studentservice.dto.RetainRequestDTO;
 import com.akata.studentservice.dto.RetainResponseDTO;
+import com.akata.studentservice.dto.SpecialityRequestDTO;
+import com.akata.studentservice.dto.SpecialityResponseDTO;
 import com.akata.studentservice.entities.Retain;
 import com.akata.studentservice.entities.Speciality;
 import com.akata.studentservice.entities.Student;
@@ -45,12 +47,10 @@ public class RetainServiceImpl implements RetainService {
                 this.studentService.getStudent(retainModel.getId_student())
         );
 
-        Speciality speciality = this.specialityMapper.specialityResponseDTOSpeciality(
-                this.specialityService.getById(retainModel.getId_speciality())
-        );
+        SpecialityResponseDTO speciality = this.specialityService.add(new SpecialityRequestDTO(retainModel.getSpeciality_name()));
 
         RetainRequestDTO retainRequestDTO = new RetainRequestDTO();
-        retainRequestDTO.setSpeciality(speciality);
+        retainRequestDTO.setSpeciality(this.specialityMapper.specialityResponseDTOSpeciality(speciality));
         retainRequestDTO.setStudent(student);
 
         return this.retainMapper.retainToResponse(

@@ -1,6 +1,7 @@
 package com.akata.studentservice.controllers;
 
 
+import com.akata.studentservice.dto.SpecialityRequestDTO;
 import com.akata.studentservice.dto.StudentRequestDTO;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.mapper.StudentMapper;
@@ -84,5 +85,15 @@ public class StudentController {
     @PostMapping(path = "/activate/{id_user}")
     public boolean activate(@PathVariable("id_user") Long id_user, @RequestBody ActivationModel code){
         return this.studentService.activate(id_user, code);
+    }
+
+    @PostMapping(path = "/update/currentPosition/{id}")
+    public boolean updateCurrentPosition(@PathVariable("id") Long id, @RequestBody SpecialityRequestDTO specialityRequestDTO){
+        return this.studentService.updateCurrentPosition(id, specialityRequestDTO);
+    }
+
+    @PutMapping(path = "/update/git/{id}")
+    public boolean updateGit(@PathVariable("id") Long id, @RequestBody String git){
+        return this.studentService.updateGit(id, git);
     }
 }

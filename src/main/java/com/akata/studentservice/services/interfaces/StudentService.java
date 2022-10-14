@@ -1,5 +1,6 @@
 package com.akata.studentservice.services.interfaces;
 
+import com.akata.studentservice.dto.SpecialityRequestDTO;
 import com.akata.studentservice.dto.StudentRequestDTO;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.model.ActivationModel;
@@ -34,4 +35,8 @@ public interface StudentService {
     String uploadVideo(MultipartFile video) throws IOException;
 
     boolean activate(Long id_user, ActivationModel code);
+
+    boolean updateCurrentPosition(Long id, SpecialityRequestDTO specialityRequestDTO);
+
+    boolean updateGit(Long id, String git);
 }

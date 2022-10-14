@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RetainModel {
     Long id_student;
-    Long id_speciality;
+    String speciality_name;
 }

@@ -33,7 +33,6 @@ public class SpecialityServiceImpl implements SpecialityService {
         List<Speciality> specialities = this.specialityRepository.findAll();
         Speciality speciality = this.specialityMapper.specialityRequestDTOSpeciality(specialityRequestDTO);
         if(specialities.contains(speciality)) {
-            System.out.println("already here");
             return this.specialityMapper.specialityRequestToResponse(specialityRequestDTO);
         }else{
             return this.specialityMapper.specialityToSpecialityResponseDTO(

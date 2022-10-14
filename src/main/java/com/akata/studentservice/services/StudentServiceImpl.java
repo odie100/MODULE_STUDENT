@@ -90,7 +90,6 @@ public class StudentServiceImpl implements StudentService {
         }catch (NullPointerException e){
             studentResponseDTO.setPhone("");
         }
-        System.out.println(student);
         return studentResponseDTO;
     }
 
@@ -134,7 +133,6 @@ public class StudentServiceImpl implements StudentService {
                 .studentToStudentResponseDTO(student)).collect(Collectors.toList());
 
         for(StudentResponseDTO studentResponseDTO: studentResponseDTOS){
-            System.out.println(studentResponseDTO);
             studentResponseDTO.setAverage(this.ratingService.average(studentResponseDTO.getId()));
             studentResponseDTO.setEmail(this.contactService.getEmail(studentResponseDTO.getId()).getValue());
             studentResponseDTO.setPhone(this.contactService.getPhone(studentResponseDTO.getId()).getValue());
@@ -150,7 +148,6 @@ public class StudentServiceImpl implements StudentService {
         Long id;
         try {
             id = this.studentRepository.login(email, password);
-            System.out.println("here is the id: "+id);
         }catch (DataAccessException e){
             throw new RuntimeException("User not found");
         }
@@ -159,7 +156,6 @@ public class StudentServiceImpl implements StudentService {
             studentLightProjection.setId(id);
             studentLightProjection.setType("student");
         }
-        System.out.println("Projection returned: "+studentLightProjection.toString());
         return studentLightProjection;
     }
 
@@ -265,6 +261,26 @@ public class StudentServiceImpl implements StudentService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean updateCurrentPosition(Long id, SpecialityRequestDTO specialityRequestDTO) {
+        try {
+            this.studentRepository.updateCurrentPosition(specialityRequestDTO.getName(), id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateGit(Long id, String git) {
+        try {
+            this.studentRepository.updateGit(git, id);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 
 }

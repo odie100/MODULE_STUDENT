@@ -27,4 +27,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Transactional
     @Query("UPDATE Student s SET s.activated = 'true' WHERE s.id = ?1")
     void activate(Long id_student);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Student  s SET s.current_position =?1 WHERE s.id = ?2")
+    void updateCurrentPosition(String currentPosition, Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Student  s SET s.github =?1 WHERE s.id = ?2")
+    void updateGit(String git, Long id);
 }

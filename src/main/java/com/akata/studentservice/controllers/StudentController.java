@@ -4,6 +4,7 @@ package com.akata.studentservice.controllers;
 import com.akata.studentservice.dto.StudentRequestDTO;
 import com.akata.studentservice.dto.StudentResponseDTO;
 import com.akata.studentservice.mapper.StudentMapper;
+import com.akata.studentservice.model.ActivationModel;
 import com.akata.studentservice.model.StudentModel;
 import com.akata.studentservice.services.FileStorageService;
 import com.akata.studentservice.services.interfaces.StudentService;
@@ -78,5 +79,10 @@ public class StudentController {
     @GetMapping(path = "/download/document/{filename}", produces = MediaType.ALL_VALUE)
     public Resource downloadDocument(@PathVariable String filename) throws IOException {
         return this.fileStorageService.loadDocument(filename);
+    }
+
+    @PostMapping(path = "/activate/{id_user}")
+    public boolean activate(@PathVariable("id_user") Long id_user, @RequestBody ActivationModel code){
+        return this.studentService.activate(id_user, code);
     }
 }

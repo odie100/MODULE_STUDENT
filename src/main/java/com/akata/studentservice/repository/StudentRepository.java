@@ -22,4 +22,9 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Transactional
     @Query("UPDATE Student s set s.cv = ?1 WHERE s.id = ?2")
     int updateCV(String cv_name, Long id);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Student s SET s.activated = 'true' WHERE s.id = ?1")
+    void activate(Long id_student);
 }

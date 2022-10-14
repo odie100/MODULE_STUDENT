@@ -25,4 +25,5 @@ public class StudentRequestDTO {
     private String github;
     private String linkedin;
     private String cv;
+    private String activated;
 }

@@ -2,25 +2,35 @@ package com.akata.studentservice.services;
 
 import com.akata.studentservice.dto.*;
 import com.akata.studentservice.entities.Student;
+import com.akata.studentservice.entities.ValidationCode;
 import com.akata.studentservice.mapper.LocationMapper;
 import com.akata.studentservice.mapper.StudentMapper;
-import com.akata.studentservice.model.ContactModel;
-import com.akata.studentservice.model.RegistrationStudentModel;
-import com.akata.studentservice.model.StudentModel;
+import com.akata.studentservice.model.*;
 import com.akata.studentservice.projections.StudentLightProjection;
 import com.akata.studentservice.repository.StudentRepository;
+import com.akata.studentservice.repository.ValidationRepository;
 import com.akata.studentservice.services.interfaces.ApplyService;
 import com.akata.studentservice.services.interfaces.ContactService;
 import com.akata.studentservice.services.interfaces.LocationService;
 import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,6 +58,20 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private final JavaMailSender emailSender;
+
+    @Autowired
+    private ValidationRepository validationRepository;
+
+    @Autowired
+    private final SpringTemplateEngine templateEngine;
+
+    public StudentServiceImpl(JavaMailSender emailSender, SpringTemplateEngine templateEngine) {
+        this.emailSender = emailSender;
+        this.templateEngine = templateEngine;
+    }
+
     @Override
     public StudentResponseDTO save(StudentRequestDTO studentRequestDTO) {
         studentRequestDTO.setCreation(LocalDate.now());
@@ -59,8 +83,13 @@ public class StudentServiceImpl implements StudentService {
     public StudentResponseDTO getStudent(Long id) {
         Student student = studentRepository.findById(id).get();
         StudentResponseDTO studentResponseDTO = this.studentMapper.studentToStudentResponseDTO(student);
+        studentResponseDTO.setAverage(this.ratingService.average(student.getId()));
         studentResponseDTO.setEmail(this.contactService.getEmail(student.getId()).getValue());
-        studentResponseDTO.setPhone(this.contactService.getPhone(student.getId()).getValue());
+        try {
+            studentResponseDTO.setPhone(this.contactService.getPhone(student.getId()).getValue());
+        }catch (NullPointerException e){
+            studentResponseDTO.setPhone("");
+        }
         System.out.println(student);
         return studentResponseDTO;
     }
@@ -135,25 +164,26 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentResponseDTO register(RegistrationStudentModel registrationStudentModel) {
+    public StudentResponseDTO register(RegistrationStudentModel registrationStudentModel) throws MessagingException {
         //Step 1:
         LocationRequestDTO locationRequestDTO = new LocationRequestDTO();
-        locationRequestDTO.setAddress(registrationStudentModel.getAddress());
-        locationRequestDTO.setCountry(registrationStudentModel.getCountry());
-        locationRequestDTO.setTown(registrationStudentModel.getTown());
+        locationRequestDTO.setAddress("vide");
+        locationRequestDTO.setCountry("vide");
+        locationRequestDTO.setTown("vide");
         LocationResponseDTO locationResponseDTO = this.locationService.save(locationRequestDTO);
         //Step 2:
         StudentRequestDTO studentRequestDTO = new StudentRequestDTO();
         studentRequestDTO.setLocation(this.locationMapper.locationResponseToLocation(locationResponseDTO));
         studentRequestDTO.setPassword(registrationStudentModel.getPassword());
         studentRequestDTO.setUsername(registrationStudentModel.getUsername());
-        studentRequestDTO.setFirstname(registrationStudentModel.getFirstname());
-        studentRequestDTO.setLevel(registrationStudentModel.getLevel());
-        studentRequestDTO.setSchool(registrationStudentModel.getSchool());
-        studentRequestDTO.setSchool_career(registrationStudentModel.getSchool_career());
-        studentRequestDTO.setBio(registrationStudentModel.getBio());
-        studentRequestDTO.setCurrent_position(registrationStudentModel.getCurrent_position());
-        StudentResponseDTO student_saved = save(studentRequestDTO);
+        studentRequestDTO.setFirstname("vide");
+        studentRequestDTO.setLevel("vide");
+        studentRequestDTO.setSchool("vide");
+        studentRequestDTO.setSchool_career("vide");
+        studentRequestDTO.setBio("vide");
+        studentRequestDTO.setCurrent_position("vide");
+        studentRequestDTO.setActivated("false");
+        StudentResponseDTO student_saved = save(studentRequestDTO);;
         //last Step:
         if(!registrationStudentModel.getEmail().isEmpty()){
             ContactRequestDTO email_contact = new ContactRequestDTO();
@@ -163,14 +193,52 @@ public class StudentServiceImpl implements StudentService {
             this.contactService.save(email_contact);
         }
 
-        if(!registrationStudentModel.getTel().isEmpty()){
+        //Send code for verification
+        int min = 1000;
+        int max = 9999;
+        int code_validation = (int) Math.floor(Math.random()*(max-min+1)+min);
+
+        this.validationRepository.save(new ValidationCode(null, student_saved.getId(), code_validation));
+
+        String from = "andriampeno.odilon@gmail.com";
+        String subject = "Activation de votre compte sur Do++";
+        String to = registrationStudentModel.getEmail();
+        String content = "Votre code de validation est: "+code_validation;
+
+        ValidationModel validationModel = new ValidationModel();
+        validationModel.setTo(to);
+        validationModel.setText(content);
+        validationModel.setFrom(from);
+        validationModel.setSubject(subject);
+        validationModel.setTemplate("");
+
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("name", registrationStudentModel.getUsername());
+        properties.put("message", content);
+        validationModel.setProperties(properties);
+
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+        Context context = new Context();
+        context.setVariables(validationModel.getProperties());
+        helper.setFrom(validationModel.getFrom());
+        helper.setTo(validationModel.getTo());
+        helper.setSubject(validationModel.getSubject());
+        String html = templateEngine.process("email-validation-template.html", context);
+        helper.setText(html, true);
+
+        try {
+            emailSender.send(message);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+/*        if(!registrationStudentModel.getTel().isEmpty()){
             ContactRequestDTO tel_contact = new ContactRequestDTO();
             tel_contact.setType("tel");
             tel_contact.setValue(registrationStudentModel.getTel());
             tel_contact.setStudent(this.studentMapper.studentResponseDTOStudent(student_saved));
             this.contactService.save(tel_contact);
-        }
-
+        }*/
         return student_saved;
     }
 
@@ -187,6 +255,16 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public String uploadVideo(MultipartFile video) throws IOException {
         return this.fileStorageService.saveVideo(video);
+    }
+
+    @Override
+    public boolean activate(Long id_user, ActivationModel code) {
+        ValidationCode validationCode = this.validationRepository.getByIdUser(id_user);
+        if(Objects.equals(validationCode.getCode_validation(), code.getCode())){
+            this.studentRepository.activate(id_user);
+            return true;
+        }
+        return false;
     }
 
 }

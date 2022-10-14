@@ -147,7 +147,6 @@ public class ApplyServiceImpl implements ApplyService {
 
         ContactResponseDTO contactResponseDTO = this.applyRestClient.getContact(confirmationModel.getId_client());
         ContactResponseDTO contactResponseDTO1 = this.contactService.findByStudentAndType("email", confirmationModel.getId_student());
-        ContactResponseDTO contactResponseDTO2 = this.contactService.findByStudentAndType("phone", confirmationModel.getId_student());
 
         String from = contactResponseDTO.getValue();
         String subject = "Retour suit au postulation";
@@ -166,8 +165,6 @@ public class ApplyServiceImpl implements ApplyService {
         email.setClient_name(confirmationModel.getClient_name());
         email.setStudent_name(confirmationModel.getStudent_name());
 
-
-
         String msg = "Félicitation "+email.getStudent_name()+"! Vous êtes selectionné parmis les candidats qui ont "+
                 "postulé à l'offre de \""+email.getClient_name().toUpperCase()+"\"";
 
@@ -177,6 +174,7 @@ public class ApplyServiceImpl implements ApplyService {
         properties.put("client", email.getClient_name());
         properties.put("message",msg);
         email.setProperties(properties);
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
         Context context = new Context();
@@ -187,10 +185,9 @@ public class ApplyServiceImpl implements ApplyService {
         String html = templateEngine.process("email-template.html", context);
         helper.setText(html, true);
 
-        Twilio.init("ACc13fba58007fc8e90050f061ddb47be3", "a3b349cac10a7f1d2fd9408c6daaae3c");
+        Twilio.init("ACc13fba58007fc8e90050f061ddb47be3", "7bd305f4d6de79bc3bfd5527d73fac7e");
         Message.creator(new PhoneNumber("+261349102786"),
                 new PhoneNumber("+17246134874"), message_phone).create();
-
         try {
             emailSender.send(message);
             return 1;
@@ -203,8 +200,13 @@ public class ApplyServiceImpl implements ApplyService {
     @Override
     public List<ApplyResponseDTO> getAllAppliesByIdOffer(Long id) {
         List<Apply> applies = this.applyRepository.getApplyByIdOffer(id);
+        OfferResponseDTO offerResponseDTO;
         for(Apply apply: applies){
-            OfferResponseDTO offerResponseDTO = this.applyRestOffer.getOffer(id);
+            try{
+                offerResponseDTO = this.applyRestOffer.getOffer(id);
+            }catch (Exception e){
+                offerResponseDTO = null;
+            }
             apply.setOffer(offerResponseDTO);
         }
         return applies.stream().map(apply -> this.applyMapper.applyToApplyResponseDTO(apply)).collect(Collectors.toList());

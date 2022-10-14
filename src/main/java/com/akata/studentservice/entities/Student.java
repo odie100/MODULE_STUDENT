@@ -27,6 +27,7 @@ public class Student {
     private String linkedin;
     private String cv;
     private String dob;
+    private String activated;
     @Lob
     private String bio;
 

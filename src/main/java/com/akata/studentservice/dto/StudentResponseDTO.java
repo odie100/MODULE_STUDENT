@@ -29,6 +29,7 @@ public class StudentResponseDTO {
     private String phone;
     private String dob;
     private String cv;
+    private boolean activated;
     private int project_on_progress;
     private int project_finished;
 }

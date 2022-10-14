@@ -9,6 +9,8 @@ import com.akata.studentservice.services.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping(path = "/api/authentication")
 public class AuthenticationController {
@@ -23,7 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/register/student")
-    public StudentResponseDTO register(@RequestBody RegistrationStudentModel registrationStudentModel){
+    public StudentResponseDTO register(@RequestBody RegistrationStudentModel registrationStudentModel) throws MessagingException {
         return this.studentService.register(registrationStudentModel);
     }
 

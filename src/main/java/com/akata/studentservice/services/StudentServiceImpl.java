@@ -135,7 +135,11 @@ public class StudentServiceImpl implements StudentService {
         for(StudentResponseDTO studentResponseDTO: studentResponseDTOS){
             studentResponseDTO.setAverage(this.ratingService.average(studentResponseDTO.getId()));
             studentResponseDTO.setEmail(this.contactService.getEmail(studentResponseDTO.getId()).getValue());
-            studentResponseDTO.setPhone(this.contactService.getPhone(studentResponseDTO.getId()).getValue());
+            try {
+                studentResponseDTO.setPhone(this.contactService.getPhone(studentResponseDTO.getId()).getValue());
+            }catch (NullPointerException e){
+                System.out.println("Phone number not found");
+            }
             studentResponseDTO.setProject_finished(this.applyService.countProjectFinished(studentResponseDTO.getId()));
             studentResponseDTO.setProject_on_progress(this.applyService.countProjectOnProgress(studentResponseDTO.getId()));
         }

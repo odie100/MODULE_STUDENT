@@ -8,4 +8,5 @@ import lombok.*;
 public class StudentLightProjection {
     Long id;
     String type;
+    String activated;
 }

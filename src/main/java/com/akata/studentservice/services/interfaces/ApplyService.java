@@ -30,4 +30,6 @@ public interface ApplyService {
     int countProjectOnProgress(Long id);
 
     int countProjectFinished(Long id);
+
+    int countApplier(Long id);
 }

@@ -95,6 +95,13 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactResponseDTO getPhone(Long id) {
-        return this.contactMapper.contactToContactResponseDTO(this.contactRepository.getPhone(id));
+        ContactResponseDTO phone;
+        try{
+            phone = this.contactMapper.contactToContactResponseDTO(this.contactRepository.getPhone(id));
+        }catch(DataAccessException e){
+            System.out.println("Phone not found");
+            phone = this.contactMapper.contactToContactResponseDTO(new Contact(null,"phone","",null));
+        }
+        return phone;
     }
 }

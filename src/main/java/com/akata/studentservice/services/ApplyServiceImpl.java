@@ -185,7 +185,7 @@ public class ApplyServiceImpl implements ApplyService {
         String html = templateEngine.process("email-template.html", context);
         helper.setText(html, true);
 
-        Twilio.init("ACc13fba58007fc8e90050f061ddb47be3", "7bd305f4d6de79bc3bfd5527d73fac7e");
+        Twilio.init("ACc13fba58007fc8e90050f061ddb47be3", "7f71a2ea0e865bbcf1bf3b5195d6e17a");
         Message.creator(new PhoneNumber("+261349102786"),
                 new PhoneNumber("+17246134874"), message_phone).create();
         try {
@@ -226,5 +226,14 @@ public class ApplyServiceImpl implements ApplyService {
     @Override
     public int countProjectFinished(Long id) {
         return this.applyRepository.countProjectFinished(id);
+    }
+
+    @Override
+    public int countApplier(Long id) {
+        try {
+            return this.applyRepository.countApplier(id);
+        }catch (Exception e){
+            return 0;
+        }
     }
 }

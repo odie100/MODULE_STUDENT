@@ -30,4 +30,7 @@ public interface ApplyRepository extends JpaRepository<Apply, Long> {
 
     @Query("SELECT COUNT(a.id) FROM Apply a WHERE a.status = 'confirmed' AND a.student.id = ?1 ")
     int countProjectFinished(Long id);
+
+    @Query("SELECT COUNT(a.id) FROM Apply a WHERE a.offer_id = ?1")
+    int countApplier(Long id);
 }

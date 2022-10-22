@@ -1,6 +1,7 @@
 package com.akata.studentservice.repository;
 
 import com.akata.studentservice.entities.Student;
+import com.akata.studentservice.projections.StudentLightProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

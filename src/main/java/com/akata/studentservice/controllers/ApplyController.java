@@ -49,7 +49,6 @@ public class ApplyController {
 
     @PostMapping(path = "/confirm")
     public int confirm(@RequestBody ConfirmationModel confirmationModel) throws MessagingException {
-
         return this.applyService.confirm(confirmationModel);
     }
 
@@ -62,4 +61,10 @@ public class ApplyController {
     public List<ApplyResponseDTO> getAllConfirmedApplies(@PathVariable("id") Long id){
         return this.applyService.getConfirmedApply(id);
     }
+
+    @GetMapping(path = "/countApplier/{id}")
+    public int countApplier(@PathVariable("id") Long id){
+        return this.applyService.countApplier(id);
+    }
+
 }
